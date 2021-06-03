@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+
+    <title>Babylon.js sample code</title>
+
+    <!-- Babylon.js -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/ammo.js"></script>
+    <script src="https://preview.babylonjs.com/cannon.js"></script>
+    <script src="https://preview.babylonjs.com/Oimo.js"></script>
+    <script src="https://preview.babylonjs.com/earcut.min.js"></script>
+    <script src="https://preview.babylonjs.com/babylon.js"></script>
+    <script src="https://preview.babylonjs.com/materialsLibrary/babylonjs.materials.min.js"></script>
+    <script src="https://preview.babylonjs.com/proceduralTexturesLibrary/babylonjs.proceduralTextures.min.js"></script>
+    <script src="https://preview.babylonjs.com/postProcessesLibrary/babylonjs.postProcess.min.js"></script>
+    <script src="https://preview.babylonjs.com/loaders/babylonjs.loaders.js"></script>
+    <script src="https://preview.babylonjs.com/serializers/babylonjs.serializers.min.js"></script>
+    <script src="https://preview.babylonjs.com/gui/babylon.gui.min.js"></script>
+    <script src="https://preview.babylonjs.com/inspector/babylon.inspector.bundle.js"></script>
+
+    <style>
+        html,
+        body {
+            overflow: hidden;
+            width: 100%;
+            height: 100%;
+            margin: 0;
+            padding: 0;
+        }
+
+        #renderCanvas {
+            width: 100%;
+            height: 100%;
+            touch-action: none;
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="renderCanvas"></canvas>
+    <script>
+        var canvas = document.getElementById("renderCanvas");
+
+        var engine = null;
+        var scene = null;
+        var sceneToRender = null;
+        var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+        var createScene = function () {
+            // Setup scene
+            const scene = new BABYLON.Scene(engine);
+            const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 4, BABYLON.Vector3.Zero());
+            camera.attachControl(canvas, true);
+            var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
+            light.intensity = 0.7;
+
+
+            createPhysicsConfig(scene);
+            /*            var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
+                        ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.5, restitution: 0.7 }, scene);*/
+
+            var sphereCollider = BABYLON.Mesh.CreateSphere("sphere1", 16, 0.5, scene);
+            sphereCollider.position.y = 2;
+            sphereCollider.position.z -= 0.5;
+            sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1 }, scene);
+
+            //createPath(10, true, "teste");
+            createPath(15, false, "teste2");
+
+            return scene;
+
+        };
+
+        function createPhysicsConfig(scene) {
+            var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
+            var physicsPlugin = new BABYLON.CannonJSPlugin();
+            scene.enablePhysics(gravityVector, physicsPlugin);
+        }
+        function createPath(length, stop, name) {
+            var root = new BABYLON.Mesh(name, scene);
+            var box1 = BABYLON.MeshBuilder.CreateBox(name + "_rightBox", { height: 0.5, width: length, depth: 0.25 });
+            box1.physicsImpostor = new BABYLON.PhysicsImpostor(box1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            box1.position.y += 0.25;
+            var box2 = BABYLON.MeshBuilder.CreateBox(name + "_downBox", { height: 0.1, width: length, depth: 1 });
+            box2.position.z -= 0.5;
+            box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            var box3 = BABYLON.MeshBuilder.CreateBox(name + "_leftBox", { height: 0.5, width: length, depth: 0.25 });
+            box3.position.z -= 1;
+            box3.position.y += 0.25;
+            box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            root.addChild(box1);
+            root.addChild(box2);
+            root.addChild(box3);
+            if (!stop) {
+                var box4 = BABYLON.MeshBuilder.CreateBox(name + "_backBox", { height: 0.5, width: 0.25, depth: 1 });
+                box4.position.x -= length / 2;
+                box4.position.y += 0.25;
+                box4.position.z -= 0.5;
+                box4.physicsImpostor = new BABYLON.PhysicsImpostor(box4, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+                root.addChild(box4);
+            }
+
+            root.rotation.z -= 0.2;
+            root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0 }, scene);
+
+        }
+        window.initFunction = async function () {
+            var asyncEngineCreation = async function () {
+                try {
+                    return createDefaultEngine();
+                } catch (e) {
+                    console.log("the available createEngine function failed. Creating the default engine instead");
+                    return createDefaultEngine();
+                }
+            }
+
+            window.engine = await asyncEngineCreation();
+            if (!engine) throw 'engine should not be null.';
+            window.scene = createScene();
+        };
+        initFunction().then(() => {
+            sceneToRender = scene
+            engine.runRenderLoop(function () {
+                if (sceneToRender && sceneToRender.activeCamera) {
+                    sceneToRender.render();
+                }
+            });
+        });
+
+        // Resize
+        window.addEventListener("resize", function () {
+            engine.resize();
+        });
+    </script>
+</body>
+
+</html>
