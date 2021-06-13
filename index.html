@@ -47,6 +47,8 @@
         var engine = null;
         var scene = null;
         var sceneToRender = null;
+        var cond = true;
+        var cond2 = true;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
         var createScene = function () {
             // Setup scene
@@ -170,10 +172,10 @@
             });
 
 
-           
+
             //createPropeller(new BABYLON.Vector3(30, -30, 0));
-            //manageEvents(sphere);
-            CreateGerator();
+            manageEvents(scene);
+
             return scene;
         };
         function CreateGerator() {
@@ -224,16 +226,56 @@
                 sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1 }, scene);
             }
         }
-        function manageEvents(sphere) {
-            /*scene.onBeforeRenderObservable.add(()=>{
+        function manageEvents(scene) {
+            scene.onBeforeRenderObservable.add(() => {
+                var mov = scene.getMeshByName('mov');
+                if (cond) {
+                    mov.position.x += 0.01;
+                    if (mov.position.x >= 1.1) {
+                        cond = false
+                    }
+                } else {
+                    mov.position.x -= 0.01;
+                    if (mov.position.x <= -1.5) {
+                        cond = true;
+                    }
+                }
 
-            });*/
+                for (var i = 1; i <= 4; i++) {
+                    var path = scene.getMeshByName('path' + i);
+                    if (cond2) {
+                        if (i % 2 == 0) {
+                            path.position.x -= 0.01;
+                        } else {
+
+                            path.position.x += 0.01;
+                        }
+                        if (i == 1) {
+                            if (path.position.x >= 2) {
+                                cond2 = false;
+                            }
+                        }
+                    } else {
+                        if (i % 2 == 0) {
+                            path.position.x += 0.01;
+                        } else {
+                            path.position.x -= 0.01;
+                        }
+                        if (i == 1) {
+                            if (path.position.x <= -0.9) {
+                                cond2 = true;
+                            }
+                        }
+                    }
+                }
+
+            });
         }
         function createPart() {
             createPath(10, false, 'path1', false).position.y -= 5;
-            createPath(10, true, 'path1', false).position = new BABYLON.Vector3(5, -8, 0);
-            createPath(10, true, 'path1', false).position = new BABYLON.Vector3(10, -11, 0);
-            createPath(10, true, 'path1', false).position = new BABYLON.Vector3(15, -14, 0);
+            createPath(10, true, 'path2', false).position = new BABYLON.Vector3(5, -8, 0);
+            createPath(10, true, 'path3', false).position = new BABYLON.Vector3(10, -11, 0);
+            createPath(10, true, 'path4', false).position = new BABYLON.Vector3(15, -14, 0);
 
         }
         function createPhysicsConfig(scene) {
@@ -324,6 +366,7 @@
             var x = 0, y = 0;
             var inc_1 = 0.75;
             var root = new BABYLON.Mesh('wall_root', scene);
+            var mov = new BABYLON.Mesh('mov', scene);
             for (var i = 0; i < 8; i++) {
                 if (i % 2 == 0) {
                     for (var j = 0; j < 6; j++) {
@@ -347,7 +390,7 @@
                         cylinder.position = new BABYLON.Vector3(x + 1.25 / 2, y, cylinder.position.z);
                         x += 1.25;
                         cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
-                        //root.addChild(cylinder);
+                        mov.addChild(cylinder);
                     }
                 }
                 x = 0;
