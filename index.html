@@ -77,7 +77,7 @@
                 var mesh = newMeshes[0];
                 mesh.position = new BABYLON.Vector3(30, -30, 0);
                 mesh.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
             //escorregador
@@ -90,7 +90,7 @@
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
             //cano
@@ -103,7 +103,7 @@
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
             //farol
@@ -116,7 +116,7 @@
                 mesh.scaling = new BABYLON.Vector3(0.15, 0.15, 0.15);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
             //tunel
@@ -129,7 +129,7 @@
                 mesh.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
             //roda
@@ -142,7 +142,7 @@
                 mesh.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
             //espiral
@@ -155,7 +155,7 @@
                 mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });*/
 
             //pista
@@ -168,7 +168,7 @@
                 mesh.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
                 mesh.rotation.y += Math.PI / 20;
                 mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
 
@@ -203,13 +203,13 @@
             const box = BABYLON.MeshBuilder.CreateBox("box", { height: 1, width: 10, depth: 7 });
             box.material = material;
             physicsRoot.addChild(box);
-            box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
             const box2 = BABYLON.MeshBuilder.CreateBox("box", { height: 10, depth: 7 });
             box2.material = material;
             box.position = box2.position = position;
             physicsRoot.addChild(box2);
-            box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
-            physicsRoot.physicsImpostor = new BABYLON.PhysicsImpostor(physicsRoot, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0 }, scene);
+            box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
+            physicsRoot.physicsImpostor = new BABYLON.PhysicsImpostor(physicsRoot, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0, friction: 0 }, scene);
 
 
         }
@@ -223,7 +223,7 @@
                 var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
                 myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
                 sphereCollider.material = myMaterial;
-                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1 }, scene);
+                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0 }, scene);
             }
         }
         function manageEvents(scene) {
@@ -293,18 +293,18 @@
             box1.position.y += 0.25;
             box1.material = myMaterial;
             root.addChild(box1);
-            box1.physicsImpostor = new BABYLON.PhysicsImpostor(box1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            box1.physicsImpostor = new BABYLON.PhysicsImpostor(box1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
             var box2 = BABYLON.MeshBuilder.CreateBox(name + "_downBox", { height: 0.1, width: length, depth: 1 });
             box2.position.z -= 0.5;
             box2.material = myMaterial;
             root.addChild(box2);
-            box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
             var box3 = BABYLON.MeshBuilder.CreateBox(name + "_leftBox", { height: 0.5, width: length, depth: 0.25 });
             box3.position.z -= 1;
             box3.position.y += 0.25;
             box3.material = myMaterial;
             root.addChild(box3);
-            box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
 
 
 
@@ -315,7 +315,7 @@
                 root.rotation.y += Math.PI;
             }
 
-            root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0 }, scene);
+            root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0, friction: 0 }, scene);
             return root;
 
         }
@@ -359,7 +359,7 @@
 
             ribbon.rotation.x += Math.PI / 2;
             ribbon.position = new BABYLON.Vector3(18, -27, -6);
-            ribbon.physicsImpostor = new BABYLON.PhysicsImpostor(ribbon, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0, friction: 1, restitution: 0.5 });
+            ribbon.physicsImpostor = new BABYLON.PhysicsImpostor(ribbon, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0, friction: 0, restitution: 0.5 });
             // ribbon.rotation.z += Math.PI / 10;
         }
         function createWall() {
@@ -377,7 +377,7 @@
                         cylinder.rotation.x += Math.PI / 2;
                         cylinder.position = new BABYLON.Vector3(x, y, cylinder.position.z);
                         x += 1.25;
-                        cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
+                        cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0, friction: 0 }, scene);
                         //root.addChild(cylinder);
                     }
                 } else {
@@ -389,7 +389,7 @@
                         cylinder.rotation.x += Math.PI / 2;
                         cylinder.position = new BABYLON.Vector3(x + 1.25 / 2, y, cylinder.position.z);
                         x += 1.25;
-                        cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
+                        cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0, friction: 0 }, scene);
                         mov.addChild(cylinder);
                     }
                 }
@@ -410,9 +410,9 @@
             box.position.z += 1;
             box.position.x += 3;
             box.position.y += 3;
-            box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+            box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
 
-            //root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0 }, scene);
+            //root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0, friction: 0 }, scene);
 
             return root;
         }
