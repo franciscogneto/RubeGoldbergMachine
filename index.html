@@ -55,56 +55,190 @@
             camera.attachControl(canvas, true);
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 0.7;
-
-
             createPhysicsConfig(scene);
-            /*            var ground = BABYLON.Mesh.CreateGround("ground1", 6, 6, 2, scene);
-                        ground.physicsImpostor = new BABYLON.PhysicsImpostor(ground, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0.5, restitution: 0.7 }, scene);*/
 
-            var sphereCollider = BABYLON.Mesh.CreateSphere("sphere1", 16, 0.5, scene);
-            sphereCollider.position.y = 2;
-            sphereCollider.position.z -= 0.5;
-            sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1 }, scene);
 
-            //createPath(10, true, "teste");
-            createPath(15, false, "teste2");
 
+
+            createWall();
+
+
+
+
+            createPart();
+            createSpheres();
+            //createTube();
+            /*BABYLON.SceneLoader.ImportMesh("", "models/", "untitled.glb", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('teste');
+                newMeshes[0].position.x += 10;
+                console.log(newMeshes[0]);
+            });*/
+
+            //manageEvents(sphere);
             return scene;
-
         };
+        function createSpheres() {
 
+            for (var i = 0; i < 8; i++) {
+                var sphereCollider = BABYLON.Mesh.CreateSphere("sphere1", 16, 0.5, scene);
+                sphereCollider.position.y = 15 - Math.random() * i;
+                sphereCollider.position.z -= 0.25;
+                sphereCollider.position.x += i * 0.75;
+                var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+                myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                sphereCollider.material = myMaterial;
+                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1 }, scene);
+            }
+        }
+        function manageEvents(sphere) {
+            /*scene.onBeforeRenderObservable.add(()=>{
+
+            });*/
+        }
+        function createPart() {
+            createPath(10, false, 'path1', false).position.y -= 5;
+            createPath(10, true, 'path1', false).position = new BABYLON.Vector3(5, -8, 0);
+            createPath(10, true, 'path1', false).position = new BABYLON.Vector3(10, -11, 0);
+            createPath(10, true, 'path1', false).position = new BABYLON.Vector3(15, -14, 0);
+
+        }
         function createPhysicsConfig(scene) {
             var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
             var physicsPlugin = new BABYLON.CannonJSPlugin();
             scene.enablePhysics(gravityVector, physicsPlugin);
         }
-        function createPath(length, stop, name) {
+        function createPath(length, stop, name, cond) {
+
+            var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
+            myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
+
             var root = new BABYLON.Mesh(name, scene);
             var box1 = BABYLON.MeshBuilder.CreateBox(name + "_rightBox", { height: 0.5, width: length, depth: 0.25 });
-            box1.physicsImpostor = new BABYLON.PhysicsImpostor(box1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
             box1.position.y += 0.25;
+            box1.material = myMaterial;
+            root.addChild(box1);
+            box1.physicsImpostor = new BABYLON.PhysicsImpostor(box1, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
             var box2 = BABYLON.MeshBuilder.CreateBox(name + "_downBox", { height: 0.1, width: length, depth: 1 });
             box2.position.z -= 0.5;
+            box2.material = myMaterial;
+            root.addChild(box2);
             box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
             var box3 = BABYLON.MeshBuilder.CreateBox(name + "_leftBox", { height: 0.5, width: length, depth: 0.25 });
             box3.position.z -= 1;
             box3.position.y += 0.25;
-            box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
-            root.addChild(box1);
-            root.addChild(box2);
+            box3.material = myMaterial;
             root.addChild(box3);
-            if (!stop) {
-                var box4 = BABYLON.MeshBuilder.CreateBox(name + "_backBox", { height: 0.5, width: 0.25, depth: 1 });
-                box4.position.x -= length / 2;
-                box4.position.y += 0.25;
-                box4.position.z -= 0.5;
-                box4.physicsImpostor = new BABYLON.PhysicsImpostor(box4, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
-                root.addChild(box4);
+            box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+
+
+
+
+            root.rotation.z -= 0.3;
+
+            if (cond) {
+                root.rotation.y += Math.PI;
             }
 
-            root.rotation.z -= 0.2;
             root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0 }, scene);
+            return root;
 
+        }
+        function createTube() {
+            var mat = new BABYLON.StandardMaterial("mat1", scene);
+            mat.alpha = 1;
+            mat.diffuseColor = new BABYLON.Color3(0.5, 0.5, 1.0);
+            mat.emissiveColor = new BABYLON.Color3.Black();
+            mat.backFaceCulling = false;
+
+            var paths = [];
+            var disp = 10;
+            var radius = 1;
+            var steps = 60;
+            var step = 2 * Math.PI / steps;
+            var circle = [];
+
+            for (var i = 0; i < 3 * Math.PI; i += step) {
+                var x = radius * Math.cos(i) + disp;
+                var y = radius * Math.sin(i);
+                var z = 0;
+                circle.push(new BABYLON.Vector3(x, y, z));
+            }
+
+            var deltaSteps = 40;
+            var delta = 2 * Math.PI / deltaSteps;
+            for (p = 0; p < 7 * Math.PI / 12; p += delta) {
+                var path = [];
+                for (var i = 0; i < circle.length; i++) {
+                    var x = circle[i].x * Math.cos(p) + circle[i].z * Math.sin(p);
+                    var y = circle[i].y;
+                    var z = -circle[i].x * Math.sin(p) + circle[i].z * Math.cos(p);
+                    path.push(new BABYLON.Vector3(x, y, z));
+                }
+                paths.push(path);
+            }
+
+            var ribbon = BABYLON.Mesh.CreateRibbon("ribbon", { pathArray: paths }, scene);
+            ribbon.material = mat;
+            ribbon.setPivotPoint(new BABYLON.Vector3(0, 0, 0));
+
+            ribbon.rotation.x += Math.PI / 2;
+            ribbon.position = new BABYLON.Vector3(18, -27, -6);
+            ribbon.physicsImpostor = new BABYLON.PhysicsImpostor(ribbon, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0, friction: 1, restitution: 0.5 });
+            // ribbon.rotation.z += Math.PI / 10;
+        }
+        function createWall() {
+            var x = 0, y = 0;
+            var inc_1 = 0.75;
+            var root = new BABYLON.Mesh('wall_root', scene);
+            for (var i = 0; i < 8; i++) {
+                if (i % 2 == 0) {
+                    for (var j = 0; j < 6; j++) {
+                        var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+                        myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                        var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder_" + i + "_" + j, { diameter: 0.25 });
+                        cylinder.material = myMaterial;
+                        cylinder.rotation.x += Math.PI / 2;
+                        cylinder.position = new BABYLON.Vector3(x, y, cylinder.position.z);
+                        x += 1.25;
+                        cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
+                        //root.addChild(cylinder);
+                    }
+                } else {
+                    for (var j = 0; j < 5; j++) {
+                        var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
+                        myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                        var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder_" + i + "_" + j, { diameter: 0.25 });
+                        cylinder.material = myMaterial;
+                        cylinder.rotation.x += Math.PI / 2;
+                        cylinder.position = new BABYLON.Vector3(x + 1.25 / 2, y, cylinder.position.z);
+                        x += 1.25;
+                        cylinder.physicsImpostor = new BABYLON.PhysicsImpostor(cylinder, BABYLON.PhysicsImpostor.CylinderImpostor, { mass: 0 }, scene);
+                        //root.addChild(cylinder);
+                    }
+                }
+                x = 0;
+                y += 1;
+            }
+            const boxMat = new BABYLON.StandardMaterial("boxMat");
+            boxMat.diffuseTexture = new BABYLON.Texture("textures/vini.png");
+            const faceUV = [];
+            faceUV[0] = new BABYLON.Vector4(0, 0, 0, 0); //6 atras
+            faceUV[1] = new BABYLON.Vector4(0, 0, 1, 1); //1 frente
+            faceUV[2] = new BABYLON.Vector4(0, 0, 0, 0); //4 direita
+            faceUV[3] = new BABYLON.Vector4(0, 0, 0, 0); //3 esquerda                      
+            faceUV[4] = new BABYLON.Vector4(0, 0, 0, 0); //2 encima
+            faceUV[5] = new BABYLON.Vector4(0, 0, 0, 0); //2 encima
+            const box = BABYLON.MeshBuilder.CreateBox("wall", { height: 10, width: 8, depth: 1, faceUV: faceUV, wrap: true });
+            box.material = boxMat;
+            box.position.z += 1;
+            box.position.x += 3;
+            box.position.y += 3;
+            box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0 }, scene);
+
+            //root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0 }, scene);
+
+            return root;
         }
         window.initFunction = async function () {
             var asyncEngineCreation = async function () {
