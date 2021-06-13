@@ -62,9 +62,9 @@
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
             myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
-
+            /*
             //funil
-            /*BABYLON.SceneLoader.ImportMesh("", "models/", "funil.glb", scene, function (newMeshes) {
+            BABYLON.SceneLoader.ImportMesh("", "models/", "funil.glb", scene, function (newMeshes) {
                 var mesh = newMeshes[0];
                 mesh.position = new BABYLON.Vector3(30, -30, 0);
                 mesh.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
@@ -76,7 +76,7 @@
                 mesh.position = new BABYLON.Vector3(30, -30, 0);
                 mesh.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
-            });*/
+            });
 
             //escorregador
             BABYLON.SceneLoader.ImportMesh("", "models/", "escorregador.babylon", scene, function (newMeshes) {
@@ -84,12 +84,93 @@
                 scene.getMeshByName('teste');
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(27.5, -24, -6);
+                mesh.position = new BABYLON.Vector3(27.5, -30, -6);
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
             });
+
+            //cano
+            BABYLON.SceneLoader.ImportMesh("", "models/", "cano.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('cano');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(13.5, -8, 0);
+                mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
+                mesh.rotation.y -= Math.PI / 2;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+            });
+
+            //farol
+            BABYLON.SceneLoader.ImportMesh("", "models/", "farol.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('farol');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(26, -18, 0);
+                mesh.scaling = new BABYLON.Vector3(0.15, 0.15, 0.15);
+                mesh.rotation.y -= Math.PI / 2;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+            });
+
+            //tunel
+            BABYLON.SceneLoader.ImportMesh("", "models/", "tunel.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('tunel');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(30, -26, -2);
+                mesh.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
+                mesh.rotation.y -= Math.PI / 2;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+            });
+
+            //roda
+            BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('roda');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(30, -26, -2);
+                mesh.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
+                mesh.rotation.y -= Math.PI / 2;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+            });
+
+            //espiral
+            BABYLON.SceneLoader.ImportMesh("", "models/", "espiral.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('espiral');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(38, -40, -22);
+                mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
+                mesh.rotation.y -= Math.PI / 2;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+            });*/
+
+            //pista
+            BABYLON.SceneLoader.ImportMesh("", "models/", "pista.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('pista');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(22, -25, 0);
+                mesh.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
+                mesh.rotation.y += Math.PI / 20;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 }); mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0 });
+            });
+
+
+           
             //createPropeller(new BABYLON.Vector3(30, -30, 0));
             //manageEvents(sphere);
             CreateGerator();
