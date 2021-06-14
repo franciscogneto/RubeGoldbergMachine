@@ -64,19 +64,46 @@
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
             myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
-            /*
+
+            //roda
+            BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('roda');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(32, -22, -6.2);
+                mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
+                mesh.rotation.z += Math.PI / 2;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+            });
+
             //funil
             BABYLON.SceneLoader.ImportMesh("", "models/", "funil.glb", scene, function (newMeshes) {
                 var mesh = newMeshes[0];
-                mesh.position = new BABYLON.Vector3(30, -30, 0);
-                mesh.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
+                mesh.position = new BABYLON.Vector3(26.5, -40, -0.7);
+                mesh.scaling = new BABYLON.Vector3(0.8, 0.8, 0.8);
             });
+
             BABYLON.SceneLoader.ImportMesh("", "models/", "cube2.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('teste');
                 var mesh = newMeshes[0];
-                mesh.position = new BABYLON.Vector3(30, -30, 0);
-                mesh.scaling = new BABYLON.Vector3(0.5, 0.5, 0.5);
+                mesh.position = new BABYLON.Vector3(26.5, -40, -0.7);
+                mesh.scaling = new BABYLON.Vector3(0.8, 0.8, 0.8);
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+            });
+
+            //farol
+            BABYLON.SceneLoader.ImportMesh("", "models/", "farol.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('farol');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(24.5, -78, -10);
+                mesh.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
+                mesh.rotation.y -= Math.PI / 16;
+                mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
@@ -86,7 +113,7 @@
                 scene.getMeshByName('teste');
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(27.5, -30, -6);
+                mesh.position = new BABYLON.Vector3(40.5, -30, -6);
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
@@ -99,25 +126,14 @@
                 scene.getMeshByName('cano');
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(13.5, -8, 0);
+                mesh.position = new BABYLON.Vector3(30.5, -8, 0);
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
-            //farol
-            BABYLON.SceneLoader.ImportMesh("", "models/", "farol.babylon", scene, function (newMeshes) {
-                // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('farol');
-                var mesh = newMeshes[0];
-                mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(26, -18, 0);
-                mesh.scaling = new BABYLON.Vector3(0.15, 0.15, 0.15);
-                mesh.rotation.y -= Math.PI / 2;
-                mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
-            });
+
 
             //tunel
             BABYLON.SceneLoader.ImportMesh("", "models/", "tunel.babylon", scene, function (newMeshes) {
@@ -125,20 +141,7 @@
                 scene.getMeshByName('tunel');
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(30, -26, -2);
-                mesh.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
-                mesh.rotation.y -= Math.PI / 2;
-                mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
-            });
-
-            //roda
-            BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
-                // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('roda');
-                var mesh = newMeshes[0];
-                mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(30, -26, -2);
+                mesh.position = new BABYLON.Vector3(70, -26, -2);
                 mesh.scaling = new BABYLON.Vector3(0.04, 0.04, 0.04);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
@@ -151,15 +154,15 @@
                 scene.getMeshByName('espiral');
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(38, -40, -22);
+                mesh.position = new BABYLON.Vector3(120, -40, -22);
                 mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
                 mesh.rotation.y -= Math.PI / 2;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
-            });*/
+            });
 
             //pista
-            BABYLON.SceneLoader.ImportMesh("", "models/", "pista.babylon", scene, function (newMeshes) {
+            /*BABYLON.SceneLoader.ImportMesh("", "models/", "pista.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('pista');
                 var mesh = newMeshes[0];
@@ -169,7 +172,7 @@
                 mesh.rotation.y += Math.PI / 20;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
-            });
+            });*/
 
 
 
@@ -223,7 +226,7 @@
                 var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
                 myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
                 sphereCollider.material = myMaterial;
-                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0 }, scene);
+                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0 }, scene);
             }
         }
         function manageEvents(scene) {
