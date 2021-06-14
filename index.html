@@ -50,6 +50,7 @@
         var cond = true;
         var cond2 = true;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
+
         var createScene = function () {
             // Setup scene
             const scene = new BABYLON.Scene(engine);
@@ -69,21 +70,16 @@
             //roda
             BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
-                //scene.getMeshByName('roda');
-                var mesh = newMeshes[0];
-                mesh.name = 'roda';
-                //var physicsRoot = new BABYLON.Mesh("rodaRoot", scene);
-                mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(26.5, -22, -0.5);
-                mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
-                var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder_", { diameter: 0.25, height: 50 });
-                //cylinder.material = myMaterial;
-                cylinder.rotation.x += Math.PI;
-                cylidner.position = mesh.position;
-                //physicsRoot.position = mesh.position;
-                //physicsRoot.addChild(mesh);
-                mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+                scene.getMeshByName('roda');
+                var roda = newMeshes[0];
+                roda.material = myMaterial;
+                roda.position = new BABYLON.Vector3(26.5, -22, -0.5);
+                roda.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
+                roda.isVisible = true;
+                roda.physicsImpostor = new BABYLON.PhysicsImpostor(roda, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+                scene.registerBeforeRender(function () {
+                    roda.rotate(BABYLON.Axis.X, 0.08);
+                })
             });
 
             //funil
@@ -154,6 +150,28 @@
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
+            //batedeira
+            BABYLON.SceneLoader.ImportMesh("", "models/", "cano.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('batedeira');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(35, -138, -100);
+                mesh.scaling = new BABYLON.Vector3(0.3, 0.04, 0.3);
+                mesh.rotation.x += Math.PI / 2;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+
+                var box = BABYLON.Mesh.CreateBox("box", 27.8, scene);
+                box.material = myMaterial;
+                box.position = new BABYLON.Vector3(35, -140, -78);
+                box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
+
+                scene.registerBeforeRender(function () {
+                    box.rotate(BABYLON.Axis.Y, 0.2);
+                })
+            });
+
             /*tunel
             BABYLON.SceneLoader.ImportMesh("", "models/", "tunel.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
@@ -181,8 +199,6 @@
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });*/
-
-
 
             //createPropeller(new BABYLON.Vector3(30, -30, 0));
             manageEvents(scene);
