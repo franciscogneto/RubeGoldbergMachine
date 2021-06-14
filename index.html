@@ -82,7 +82,8 @@
             createWall();
             createPart();
             //createSpheres();
-            createParticles(scene)
+            createParticles(scene);
+            loadSound(scene);
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
             myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
@@ -221,7 +222,7 @@
                     }
 
                     balls.forEach((element) => {
-                        if (element.position.y <= - 250)
+                        if (element.position.y <= - 500)
                             element.dispose();
                     });
 
@@ -437,6 +438,19 @@
                     //roda.rotation.x += Math.PI / 12;
                 }*/
             });
+        }
+        function loadSound(scene) {
+
+            // Background Music
+            var music = new BABYLON.Sound("gameSound", "sounds/backgorundsound.mp3", scene, null, {
+                volume: 0.03,
+                loop: true,
+                autoplay: true
+            });
+
+            // Collecting Apple
+
+
         }
         function createPart() {
             createPath(10, false, 'path1', false).position.y -= 5;
