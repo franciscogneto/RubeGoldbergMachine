@@ -194,16 +194,15 @@
             });
 
 
-
-            //cano que Spawna
-            BABYLON.SceneLoader.ImportMesh("", "models/", "cano.babylon", scene, function (newMeshes) {
+            //zeppelin
+            BABYLON.SceneLoader.ImportMesh("", "models/", "zeppelin.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
 
                 var mesh = newMeshes[0];
-                mesh.name = 'spawn';
-                mesh.position = new BABYLON.Vector3(1.5, 10.25, -0.5);
-                mesh.rotation.x += Math.PI / 2;
-                mesh.scaling = new BABYLON.Vector3(0.01, 0.005, 0.01);
+                mesh.name = 'zeppelin';
+                mesh.position = new BABYLON.Vector3(1.5, 12, -1.5);
+                mesh.rotation.y -= Math.PI / 2;
+                mesh.scaling = new BABYLON.Vector3(0.03, 0.03, 0.03);
 
                 mesh.isVisible = true;
                 var myMaterial = new BABYLON.StandardMaterial("spawner", scene);
@@ -222,7 +221,7 @@
                     }
 
                     balls.forEach((element) => {
-                        if (element.position.y <= - 500)
+                        if (element.position.y <= - 250)
                             element.dispose();
                     });
 
@@ -242,7 +241,6 @@
 
                     }
                 }, 750);
-
             });
 
             //ship
