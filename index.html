@@ -49,19 +49,39 @@
         var sceneToRender = null;
         var cond = true;
         var cond2 = true;
+        var cond3 = true;
+        var balls = [];
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
 
         var createScene = function () {
             // Setup scene
             const scene = new BABYLON.Scene(engine);
-            const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 4, new BABYLON.Vector3(0, - 70, -100));
-            camera.attachControl(canvas, true);
+            /*const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 4, new BABYLON.Vector3(0, - 70, -100));
+            camera.attachControl(canvas, true);*/var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -20), scene);
+
+            // Enable mouse wheel inputs.
+            camera.inputs.addMouseWheel();
+
+            // Change the mouse wheel Y axis to controll the cameras height in the scene:
+            //camera.inputs.attached["mousewheel"].wheelYMoveRelative = BABYLON.Coordinate.Y;
+
+            // Revese the mouse wheel Y axis direction:
+            // camera.inputs.attached["mousewheel"].wheelPrecisionY = -1;
+
+
+
+            // This attaches the camera to the canvas
+            camera.attachControl(true);
+
+
+
+
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 0.7;
             createPhysicsConfig(scene);
             createWall();
             createPart();
-            createSpheres();
+            //createSpheres();
             createParticles(scene)
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
@@ -78,7 +98,7 @@
                 roda.isVisible = true;
                 roda.physicsImpostor = new BABYLON.PhysicsImpostor(roda, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
                 scene.registerBeforeRender(function () {
-                    roda.rotate(BABYLON.Axis.X, 0.08);
+                    roda.rotate(BABYLON.Axis.X, 0.06);
                 })
             });
 
@@ -171,6 +191,59 @@
                     box.rotate(BABYLON.Axis.Y, 0.2);
                 })
             });
+
+
+
+            //cano que Spawna
+            BABYLON.SceneLoader.ImportMesh("", "models/", "cano.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+
+                var mesh = newMeshes[0];
+                mesh.name = 'spawn';
+                mesh.position = new BABYLON.Vector3(1.5, 10.25, -0.5);
+                mesh.rotation.x += Math.PI / 2;
+                mesh.scaling = new BABYLON.Vector3(0.01, 0.005, 0.01);
+
+                mesh.isVisible = true;
+                var myMaterial = new BABYLON.StandardMaterial("spawner", scene);
+                myMaterial.diffuseTexture = new BABYLON.Texture("textures/rocha.jpg");
+                mesh.material = myMaterial;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+                scene.registerBeforeRender(function () {
+                    if (cond3) {
+                        mesh.position.x += 0.01;
+                        if (mesh.position.x >= 5.5)
+                            cond3 = false;
+                    } else {
+                        mesh.position.x -= 0.01;
+                        if (mesh.position.x <= 1.5)
+                            cond3 = true;
+                    }
+
+                    balls.forEach((element) => {
+                        if (element.position.y <= - 250)
+                            element.dispose();
+                    });
+
+                });
+                setInterval(function () {
+                    if (balls.length < 60) {
+                        var sphereCollider = BABYLON.Mesh.CreateSphere("s", 16, 0.5, scene);
+                        sphereCollider.position.y = mesh.position.y;
+                        sphereCollider.position.z = mesh.position.z + 0.75;
+                        sphereCollider.position.x = mesh.position.x;
+                        balls.push(sphereCollider);
+                        var myMaterial = new BABYLON.StandardMaterial("myBallMaterial", scene);
+                        myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                        sphereCollider.material = myMaterial;
+                        sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0 }, scene);
+                        balls.push(sphereCollider);
+
+                    }
+                }, 750);
+
+            });
+
 
             /*tunel
             BABYLON.SceneLoader.ImportMesh("", "models/", "tunel.babylon", scene, function (newMeshes) {
