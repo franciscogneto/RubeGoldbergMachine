@@ -14,8 +14,8 @@ Exporter version: 2.80.1, Blender version: 2.93.0
 	WARNING: No active camera has been assigned, or is not in a currently selected Blender layer
 	processing begun of mesh:  uploads_files_102330_Part2.STL(3)
 		WARNING: No materials have been assigned: 
-		num positions      :  20190
-		num normals        :  20190
+		num positions      :  20192
+		num normals        :  20192
 		num tangents       :  0
 		num uvs            :  0
 		num uvs2           :  0
@@ -25,4 +25,4 @@ Exporter version: 2.80.1, Blender version: 2.93.0
 	writing mesh:  uploads_files_102330_Part2.STL(3)
 ========= Writing of JSON file completed =========
 ========= end of processing =========
-elapsed time:  0 min, 0.7355 secs
+elapsed time:  0 min, 0.8406 secs
