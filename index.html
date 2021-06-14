@@ -100,9 +100,22 @@
                 scene.getMeshByName('farol');
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(24.5, -78, -10);
+                mesh.position = new BABYLON.Vector3(24.5, -78, -10.3);
                 mesh.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
                 mesh.rotation.y -= Math.PI / 16;
+                mesh.isVisible = true;
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+            });
+
+            //cano
+            BABYLON.SceneLoader.ImportMesh("", "models/", "cano.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('cano');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(10.8, -78, -21.5);
+                mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
+                mesh.rotation.y += 5.65*Math.PI/6;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
@@ -120,18 +133,7 @@
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
-            //cano
-            BABYLON.SceneLoader.ImportMesh("", "models/", "cano.babylon", scene, function (newMeshes) {
-                // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('cano');
-                var mesh = newMeshes[0];
-                mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(30.5, -8, 0);
-                mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
-                mesh.rotation.y -= Math.PI / 2;
-                mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
-            });
+            
 
 
 
@@ -226,7 +228,7 @@
                 var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
                 myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
                 sphereCollider.material = myMaterial;
-                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 2, friction: 0 }, scene);
+                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0 }, scene);
             }
         }
         function manageEvents(scene) {
