@@ -53,7 +53,7 @@
         var createScene = function () {
             // Setup scene
             const scene = new BABYLON.Scene(engine);
-            const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 4,  new BABYLON.Vector3(0, - 70, -100));
+            const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 4, new BABYLON.Vector3(0, - 70, -100));
             camera.attachControl(canvas, true);
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 0.7;
@@ -61,6 +61,7 @@
             createWall();
             createPart();
             createSpheres();
+            createParticles(scene)
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
             myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
@@ -68,11 +69,19 @@
             //roda
             BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('roda');
+                //scene.getMeshByName('roda');
                 var mesh = newMeshes[0];
+                mesh.name = 'roda';
+                //var physicsRoot = new BABYLON.Mesh("rodaRoot", scene);
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(26.5, -22, -0.5);
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
+                var cylinder = BABYLON.MeshBuilder.CreateCylinder("cylinder_", { diameter: 0.25, height: 50 });
+                //cylinder.material = myMaterial;
+                cylinder.rotation.x += Math.PI;
+                cylidner.position = mesh.position;
+                //physicsRoot.position = mesh.position;
+                //physicsRoot.addChild(mesh);
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
@@ -114,7 +123,7 @@
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(10.8, -78, -21.5);
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
-                mesh.rotation.y += 5.65*Math.PI/6;
+                mesh.rotation.y += 5.65 * Math.PI / 6;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
@@ -127,7 +136,7 @@
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(7.3, -86.8, -39.2);
                 mesh.scaling = new BABYLON.Vector3(0.022, 0.025, 0.025);
-                mesh.rotation.y += 11*Math.PI/5.69;
+                mesh.rotation.y += 11 * Math.PI / 5.69;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
@@ -158,7 +167,7 @@
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });*/
 
-            
+
 
             //pista
             /*BABYLON.SceneLoader.ImportMesh("", "models/", "pista.babylon", scene, function (newMeshes) {
@@ -180,6 +189,57 @@
 
             return scene;
         };
+        function createParticles(scene) {
+
+            xLimit = 25;
+            var particleSystem = new BABYLON.ParticleSystem("particles", 1000, scene);
+            particleSystem.particleTexture = new BABYLON.Texture("textures/particle.png", scene);
+            particleSystem.emitter = new BABYLON.Vector3(24.5, -78, -10.3);
+            particleSystem.minEmitBox = new BABYLON.Vector3((-1) * xLimit, 0, 0);
+            particleSystem.maxEmitBox = new BABYLON.Vector3(xLimit, 0, 0);
+            //particleSystem.color1 = new BABYLON.Color4(1, 0.2, 1.0, 0.4);
+            particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
+
+            particleSystem.colorDead = new BABYLON.Color4(1, 1, 1, 1);
+
+            particleSystem.minSize = 0.1;
+            particleSystem.maxSize = 0.2;
+
+            particleSystem.minLifeTime = 0.1;
+            particleSystem.maxLifeTime = 0.3;
+
+            particleSystem.emitRate = 5000;
+
+            particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+
+
+            particleSystem.direction1 = new BABYLON.Vector3(0, 8, 2);
+            particleSystem.direction2 = new BABYLON.Vector3(1, 8, -2);
+
+            particleSystem.minAngularSpeed = 0;
+            particleSystem.maxAngularSpeed = Math.PI;
+
+            particleSystem.minEmitPower = 1;
+            particleSystem.maxEmitPower = 2;
+            particleSystem.updateSpeed = 0.025;
+            var invisimitter = BABYLON.Mesh.CreateBox("e", .001, scene);
+            invisimitter.visibility = 0;
+            particleSystem.emitter = invisimitter;
+            invisimitter.position = new BABYLON.Vector3(24.5, -45, -10.3);
+            var lux = BABYLON.MeshBuilder.CreateSphere("lux", { diameter: 4 }, scene);
+            var myMaterial = new BABYLON.StandardMaterial("luxMaterial", scene);
+            myMaterial.emissiveColor = new BABYLON.Color3(1, 1, 1);
+            lux.position = invisimitter.position;
+            lux.material = myMaterial;
+
+            var alpha = 0;
+            var incr = 1.5;
+            scene.beforeRender = () => {
+                invisimitter.rotation.y += 0.01;
+            }
+            particleSystem.start();
+        }
         function CreateGerator() {
             var exponentialPath = function (p) {
                 var path = [];
@@ -270,7 +330,11 @@
                         }
                     }
                 }
-
+                /*var roda = scene.getMeshByName('roda');
+                if (roda != null) {
+                    //roda.position.z += 0.01;
+                    //roda.rotation.x += Math.PI / 12;
+                }*/
             });
         }
         function createPart() {
