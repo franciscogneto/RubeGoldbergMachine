@@ -277,7 +277,7 @@
                     i--;
                     if (i === -1) {
                         setInterval(function () {
-                            if(balls.length < 20) {
+                            if(balls.length < 8) {
                                 var sphereCollider = BABYLON.Mesh.CreateSphere("s", 16, 0.5, scene);
                                 sphereCollider.position.y = mesh.position.y;
                                 sphereCollider.position.z = mesh.position.z + 0.75;
