@@ -4,7 +4,7 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 
-    <title>Babylon.js sample code</title>
+    <title>Babylon.js AF 180141 180854 - RUBE GOLDBERG MACHINE</title>
 
     <!-- Babylon.js -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.6.2/dat.gui.min.js"></script>
@@ -53,28 +53,20 @@
         var advancedTexture = null;
         var balls = [];
         var ship;
+        var btn_restart = null;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
 
         var createScene = function () {
             // Setup scene
             const scene = new BABYLON.Scene(engine);
-            /*const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 4, new BABYLON.Vector3(0, - 70, -100));
-            camera.attachControl(canvas, true);*/
+           
             var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -20), scene);
             camera.inputs.addMouseWheel();
             camera.attachControl(true);
 
-
-
-
             var light = new BABYLON.HemisphericLight("light1", new BABYLON.Vector3(0, 1, 0), scene);
             light.intensity = 0.7;
-            createPhysicsConfig(scene);
-            createWall();
-            createPart();
-            //createSpheres();
-            createParticles(scene);
-            loadSound(scene);
+
             // Skybox
             var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 10000.0 }, scene);
             var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
@@ -84,12 +76,22 @@
             skyboxMaterial.diffuseColor = BABYLON.Color3.Black();
             skyboxMaterial.specularColor = BABYLON.Color3.Black();
             skybox.material = skyboxMaterial;
-            //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
             myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
-            start_game();
+
             build_GUI();
-            //onCollide();
+
+            loadSound(scene);
+
+            createPhysicsConfig(scene);
+
+            createWall();
+
+            createPart();
+
+            createParticles(scene);
+
+            start_game();
 
             //roda
             BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
@@ -254,7 +256,7 @@
                     }
 
                     balls.forEach((element) => {
-                        if (element.position.y <= - 800) {
+                        if (element.position.y <= - 800 && balls.length > 1) {
                             element.dispose();
                         }
                         else {
@@ -263,18 +265,19 @@
                                     onCollide(element.position);
                                     console.log('y: ' + element.position.y);
                                     element.dispose();
+                                    btn_restart.isVisible = true;
                                 }
                             }
 
                         }
                     });
                 });
-                var i = 15;
+                var i = 11;
                 var handle = window.setInterval(() => {
                     i--;
                     if (i === -1) {
                         setInterval(function () {
-                            if (balls.length < 5) {
+                            if(balls.length < 8) {
                                 var sphereCollider = BABYLON.Mesh.CreateSphere("s", 16, 0.5, scene);
                                 sphereCollider.position.y = mesh.position.y;
                                 sphereCollider.position.z = mesh.position.z + 0.75;
@@ -285,15 +288,13 @@
                                 sphereCollider.material = myMaterial;
                                 sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0, restitution: 0 }, scene);
                                 balls.push(sphereCollider);
-
                             }
-                        }, 1500);
+                        }, 1000);
                     }
-                }, 1500);
+                }, 1000);
             });
 
             //ship
-
             BABYLON.SceneLoader.ImportMesh("", "models/", "ship.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('ship');
@@ -310,45 +311,7 @@
 
             return scene;
         };
-        function onCollide(position) {
-            xLimit = 25;
-            var particleSystem = new BABYLON.ParticleSystem("particles", 100, scene);
-            particleSystem.particleTexture = new BABYLON.Texture("textures/fire.png", scene);
-            particleSystem.emitter = position;
-            particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0);
-            particleSystem.maxEmitBox = new BABYLON.Vector3(2, 3, 0);
-            particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
 
-            particleSystem.colorDead = new BABYLON.Color4(1, 1, 1, 1);
-
-            particleSystem.minSize = 0.1;
-            particleSystem.maxSize = 0.2;
-
-            particleSystem.minLifeTime = 0.1;
-            particleSystem.maxLifeTime = 0.3;
-
-            particleSystem.emitRate = 500;
-
-            particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-
-
-
-            particleSystem.direction1 = new BABYLON.Vector3(0, 8, 2);
-            particleSystem.direction2 = new BABYLON.Vector3(1, 8, -2);
-
-            particleSystem.minAngularSpeed = 0;
-            particleSystem.maxAngularSpeed = Math.PI;
-
-            particleSystem.minEmitPower = 1;
-            particleSystem.maxEmitPower = 2;
-            particleSystem.updateSpeed = 0.025;
-            particleSystem.maxLifeTime = 3;
-
-            particleSystem.targetStopDuration = 2;
-            particleSystem.start();
-
-
-        }
         function build_GUI() {
 
             advancedTexture;
@@ -395,8 +358,8 @@
 
             advancedTexture.addControl(btn_restart);
         }
-        function start_game() {
 
+        function start_game() {
             var i = 15;
             var textBlock = new BABYLON.GUI.TextBlock("text", new String(i));
             textBlock.color = "red";
@@ -410,12 +373,46 @@
                     window.clearInterval(handle);
                     textBlock.dispose();
                     advancedTexture.dispose();
-                    build_machine();
                 }
             }, 1000);
         }
-        function build_machine() {
 
+        function onCollide(position) {
+            xLimit = 25;
+            var particleSystem = new BABYLON.ParticleSystem("particles", 100, scene);
+            particleSystem.particleTexture = new BABYLON.Texture("textures/fire.png", scene);
+            particleSystem.emitter = position;
+            particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0);
+            particleSystem.maxEmitBox = new BABYLON.Vector3(2, 3, 0);
+            particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
+
+            particleSystem.colorDead = new BABYLON.Color4(1, 1, 1, 1);
+
+            particleSystem.minSize = 0.1;
+            particleSystem.maxSize = 0.2;
+
+            particleSystem.minLifeTime = 0.1;
+            particleSystem.maxLifeTime = 0.3;
+
+            particleSystem.emitRate = 500;
+
+            particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+
+
+            particleSystem.direction1 = new BABYLON.Vector3(0, 8, 2);
+            particleSystem.direction2 = new BABYLON.Vector3(1, 8, -2);
+
+            particleSystem.minAngularSpeed = 0;
+            particleSystem.maxAngularSpeed = Math.PI;
+
+            particleSystem.minEmitPower = 1;
+            particleSystem.maxEmitPower = 2;
+            particleSystem.updateSpeed = 0.025;
+            particleSystem.maxLifeTime = 3;
+
+            particleSystem.targetStopDuration = 2;
+            particleSystem.start();
         }
 
         function createParticles(scene) {
@@ -439,8 +436,6 @@
             particleSystem.emitRate = 5000;
 
             particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
-
-
 
             particleSystem.direction1 = new BABYLON.Vector3(0, 8, 2);
             particleSystem.direction2 = new BABYLON.Vector3(1, 8, -2);
@@ -468,6 +463,7 @@
             }
             particleSystem.start();
         }
+
         function CreateGerator() {
             var exponentialPath = function (p) {
                 var path = [];
@@ -486,6 +482,7 @@
             var mesh = BABYLON.Mesh.CreateRibbon("ribbon", arrayOfPaths, false, false, 0, scene);
             mesh.scaling = new BABYLON.Vector3(0.06, 0.06, 0.06);
         }
+
         function createPropeller(position) {
             var physicsRoot = new BABYLON.Mesh("physicsRoot", scene);
             var material = new BABYLON.StandardMaterial('materialPropeller');
@@ -500,22 +497,8 @@
             physicsRoot.addChild(box2);
             box2.physicsImpostor = new BABYLON.PhysicsImpostor(box2, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
             physicsRoot.physicsImpostor = new BABYLON.PhysicsImpostor(physicsRoot, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0, friction: 0 }, scene);
-
-
         }
-        function createSpheres() {
 
-            for (var i = 0; i < 8; i++) {
-                var sphereCollider = BABYLON.Mesh.CreateSphere("sphere1", 16, 0.5, scene);
-                sphereCollider.position.y = 15 - Math.random() * i;
-                sphereCollider.position.z -= 0.25;
-                sphereCollider.position.x += i * 0.75;
-                var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
-                myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
-                sphereCollider.material = myMaterial;
-                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0, restitution: 0 }, scene);
-            }
-        }
         function manageEvents(scene) {
             scene.onBeforeRenderObservable.add(() => {
                 var mov = scene.getMeshByName('mov');
@@ -558,13 +541,13 @@
                         }
                     }
                 }
-                /*var roda = scene.getMeshByName('roda');
-                if (roda != null) {
-                    //roda.position.z += 0.01;
-                    //roda.rotation.x += Math.PI / 12;
-                }*/
+            });
+
+            btn_restart.onPointerUpObservable.add(function () {
+                window.location.reload();
             });
         }
+
         function loadSound(scene) {
 
             // Background Music
@@ -573,23 +556,21 @@
                 loop: true,
                 autoplay: true
             });
-
-            // Collecting Apple
-
-
         }
+
         function createPart() {
             createPath(10, false, 'path1', false).position.y -= 5;
             createPath(10, true, 'path2', false).position = new BABYLON.Vector3(5, -8, 0);
             createPath(10, true, 'path3', false).position = new BABYLON.Vector3(10, -12, 0);
             createPath(10, true, 'path4', false).position = new BABYLON.Vector3(15, -15, 0);
-
         }
+
         function createPhysicsConfig(scene) {
             var gravityVector = new BABYLON.Vector3(0, -9.81, 0);
             var physicsPlugin = new BABYLON.CannonJSPlugin();
             scene.enablePhysics(gravityVector, physicsPlugin);
         }
+
         function createPath(length, stop, name, cond) {
 
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
@@ -613,9 +594,6 @@
             root.addChild(box3);
             box3.physicsImpostor = new BABYLON.PhysicsImpostor(box3, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
 
-
-
-
             root.rotation.z -= 0.3;
 
             if (cond) {
@@ -624,52 +602,10 @@
 
             root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0, friction: 0 }, scene);
             return root;
-
         }
-        function createTube() {
-            var mat = new BABYLON.StandardMaterial("mat1", scene);
-            mat.alpha = 1;
-            mat.diffuseColor = new BABYLON.Color3(0.5, 0.5, 1.0);
-            mat.emissiveColor = new BABYLON.Color3.Black();
-            mat.backFaceCulling = false;
 
-            var paths = [];
-            var disp = 10;
-            var radius = 1;
-            var steps = 60;
-            var step = 2 * Math.PI / steps;
-            var circle = [];
-
-            for (var i = 0; i < 3 * Math.PI; i += step) {
-                var x = radius * Math.cos(i) + disp;
-                var y = radius * Math.sin(i);
-                var z = 0;
-                circle.push(new BABYLON.Vector3(x, y, z));
-            }
-
-            var deltaSteps = 40;
-            var delta = 2 * Math.PI / deltaSteps;
-            for (p = 0; p < 7 * Math.PI / 12; p += delta) {
-                var path = [];
-                for (var i = 0; i < circle.length; i++) {
-                    var x = circle[i].x * Math.cos(p) + circle[i].z * Math.sin(p);
-                    var y = circle[i].y;
-                    var z = -circle[i].x * Math.sin(p) + circle[i].z * Math.cos(p);
-                    path.push(new BABYLON.Vector3(x, y, z));
-                }
-                paths.push(path);
-            }
-
-            var ribbon = BABYLON.Mesh.CreateRibbon("ribbon", { pathArray: paths }, scene);
-            ribbon.material = mat;
-            ribbon.setPivotPoint(new BABYLON.Vector3(0, 0, 0));
-
-            ribbon.rotation.x += Math.PI / 2;
-            ribbon.position = new BABYLON.Vector3(18, -27, -6);
-            ribbon.physicsImpostor = new BABYLON.PhysicsImpostor(ribbon, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0, friction: 0, restitution: 0 });
-            // ribbon.rotation.z += Math.PI / 10;
-        }
         function createWall() {
+
             var x = 0, y = 0;
             var inc_1 = 0.75;
             var root = new BABYLON.Mesh('wall_root', scene);
@@ -703,6 +639,7 @@
                 x = 0;
                 y += 1;
             }
+
             const boxMat = new BABYLON.StandardMaterial("boxMat");
             boxMat.diffuseTexture = new BABYLON.Texture("textures/vini.png");
             const faceUV = [];
@@ -719,10 +656,9 @@
             box.position.y += 3;
             box.physicsImpostor = new BABYLON.PhysicsImpostor(box, BABYLON.PhysicsImpostor.BoxImpostor, { mass: 0, friction: 0 }, scene);
 
-            //root.physicsImpostor = new BABYLON.PhysicsImpostor(root, BABYLON.PhysicsImpostor.NoImpostor, { mass: 0, friction: 0 }, scene);
-
             return root;
         }
+
         window.initFunction = async function () {
             var asyncEngineCreation = async function () {
                 try {
