@@ -82,7 +82,7 @@
             createWall();
             createPart();
             //createSpheres();
-            createParticles(scene);
+            //createParticles(scene);
             loadSound(scene);
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
@@ -91,7 +91,9 @@
             //roda
             BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('roda');
+                var myMaterial = new BABYLON.StandardMaterial("rodaMaterial", scene);
+                myMaterial.diffuseColor = new BABYLON.Color3(0.5, 0.5, 0.5);
+
                 var roda = newMeshes[0];
                 roda.material = myMaterial;
                 roda.position = new BABYLON.Vector3(26.5, -22, -0.5);
@@ -123,6 +125,9 @@
             BABYLON.SceneLoader.ImportMesh("", "models/", "farol.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('farol');
+                var myMaterial = new BABYLON.StandardMaterial("farolMaterial", scene);
+                myMaterial.diffuseTexture = new BABYLON.Texture("textures/blue-texture.jpg");
+
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(24.5, -78, -10.3);
@@ -137,6 +142,9 @@
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('cano');
                 var mesh = newMeshes[0];
+                var myMaterial = new BABYLON.StandardMaterial("canoMaterial", scene);
+                myMaterial.diffuseTexture = new BABYLON.Texture("textures/red-texture.jpg");
+
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(10.8, -78, -21.5);
                 mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
@@ -150,6 +158,9 @@
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('escorregador');
                 var mesh = newMeshes[0];
+                var myMaterial = new BABYLON.StandardMaterial("escorregadorMaterial", scene);
+                myMaterial.diffuseTexture = new BABYLON.Texture("textures/red-texture.jpg");
+
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(7.3, -86.8, -39.2);
                 mesh.scaling = new BABYLON.Vector3(0.022, 0.025, 0.025);
@@ -163,6 +174,9 @@
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('espiral');
                 var mesh = newMeshes[0];
+                var myMaterial = new BABYLON.StandardMaterial("espiralMaterial", scene);
+                myMaterial.diffuseTexture = new BABYLON.Texture("textures/white-texture.jpg");
+
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(-6, -112.5, -75.85);
                 mesh.scaling = new BABYLON.Vector3(0.3, 0.3, 0.3);
@@ -176,6 +190,10 @@
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('batedeira');
                 var mesh = newMeshes[0];
+                console.log('quantidade: ' + newMeshes.length);
+                var myMaterial = new BABYLON.StandardMaterial("batedeiraMaterial", scene);
+                myMaterial.diffuseTexture = new BABYLON.Texture("textures/hipinose-texture.jpg");
+
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(35, -138, -100);
                 mesh.scaling = new BABYLON.Vector3(0.3, 0.04, 0.3);
@@ -240,7 +258,7 @@
                         balls.push(sphereCollider);
 
                     }
-                }, 750);
+                }, 1500);
             });
 
             //ship
@@ -254,37 +272,6 @@
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
-
-
-            /*tunel
-            BABYLON.SceneLoader.ImportMesh("", "models/", "tunel.babylon", scene, function (newMeshes) {
-                // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('tunel');
-                var mesh = newMeshes[0];
-                mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(40, -138.1, -80);
-                mesh.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
-                mesh.rotation.y -= Math.PI / 5.8;
-                mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
-            });*/
-
-
-
-            //pista
-            /*BABYLON.SceneLoader.ImportMesh("", "models/", "pista.babylon", scene, function (newMeshes) {
-                // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('pista');
-                var mesh = newMeshes[0];
-                mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(22, -25, 0);
-                mesh.scaling = new BABYLON.Vector3(0.1, 0.1, 0.1);
-                mesh.rotation.y += Math.PI / 20;
-                mesh.isVisible = true;
-                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
-            });*/
-
-            //createPropeller(new BABYLON.Vector3(30, -30, 0));
             manageEvents(scene);
 
             return scene;
@@ -297,7 +284,6 @@
             particleSystem.emitter = new BABYLON.Vector3(24.5, -78, -10.3);
             particleSystem.minEmitBox = new BABYLON.Vector3((-1) * xLimit, 0, 0);
             particleSystem.maxEmitBox = new BABYLON.Vector3(xLimit, 0, 0);
-            //particleSystem.color1 = new BABYLON.Color4(1, 0.2, 1.0, 0.4);
             particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
 
             particleSystem.colorDead = new BABYLON.Color4(1, 1, 1, 1);
