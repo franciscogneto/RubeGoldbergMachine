@@ -50,6 +50,7 @@
         var cond = true;
         var cond2 = true;
         var cond3 = true;
+        var advancedTexture = null;
         var balls = [];
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
 
@@ -87,6 +88,9 @@
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
             myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
+            start_game();
+            build_GUI();
+
 
             //roda
             BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
@@ -96,12 +100,12 @@
 
                 var roda = newMeshes[0];
                 roda.material = myMaterial;
-                roda.position = new BABYLON.Vector3(26.5, -22, -0.5);
+                roda.position = new BABYLON.Vector3(26.5, -25, -0.5);
                 roda.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
                 roda.isVisible = true;
-                roda.physicsImpostor = new BABYLON.PhysicsImpostor(roda, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+                roda.physicsImpostor = new BABYLON.PhysicsImpostor(roda, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0.2, restitution: 0 });
                 scene.registerBeforeRender(function () {
-                    roda.rotate(BABYLON.Axis.X, 0.06);
+                    roda.rotate(BABYLON.Axis.X, 0.04);
                 })
             });
 
@@ -114,10 +118,22 @@
 
             BABYLON.SceneLoader.ImportMesh("", "models/", "cube2.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
-                scene.getMeshByName('teste');
+                scene.getMeshByName('funil');
                 var mesh = newMeshes[0];
                 mesh.position = new BABYLON.Vector3(26.5, -40, -0.7);
                 mesh.scaling = new BABYLON.Vector3(0.8, 0.8, 0.8);
+                mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
+            });
+
+            BABYLON.SceneLoader.ImportMesh("", "models/", "cano.babylon", scene, function (newMeshes) {
+                // Set the target of the camera to the first imported mesh
+                scene.getMeshByName('cano');
+                var mesh = newMeshes[0];
+                mesh.material = myMaterial;
+                mesh.position = new BABYLON.Vector3(26.5, -42, -1.58);
+                mesh.scaling = new BABYLON.Vector3(0.012, 0.018, 0.012);
+                mesh.rotation.x += Math.PI / 2;
+                mesh.isVisible = false;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
 
@@ -130,7 +146,7 @@
 
                 var mesh = newMeshes[0];
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(24.5, -78, -10.3);
+                mesh.position = new BABYLON.Vector3(24.5, -78, -11);
                 mesh.scaling = new BABYLON.Vector3(0.4, 0.4, 0.4);
                 mesh.rotation.y -= Math.PI / 16;
                 mesh.isVisible = true;
@@ -146,8 +162,8 @@
                 myMaterial.diffuseTexture = new BABYLON.Texture("textures/red-texture.jpg");
 
                 mesh.material = myMaterial;
-                mesh.position = new BABYLON.Vector3(10.8, -78, -21.5);
-                mesh.scaling = new BABYLON.Vector3(0.02, 0.02, 0.02);
+                mesh.position = new BABYLON.Vector3(10.8, -78, -21.75);
+                mesh.scaling = new BABYLON.Vector3(0.02, 0.0196, 0.02);
                 mesh.rotation.y += 5.65 * Math.PI / 6;
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
@@ -238,25 +254,30 @@
                             cond3 = true;
                     }
 
-                    balls.forEach((element) => {
-                        if (element.position.y <= - 250)
+                    /*balls.forEach((element) => {
+                        if (element.position.y <= - 800)
                             element.dispose();
-                    });
-
+                    });*/
                 });
-                setInterval(function () {
-                    if (balls.length < 60) {
-                        var sphereCollider = BABYLON.Mesh.CreateSphere("s", 16, 0.5, scene);
-                        sphereCollider.position.y = mesh.position.y;
-                        sphereCollider.position.z = mesh.position.z + 0.75;
-                        sphereCollider.position.x = mesh.position.x;
-                        balls.push(sphereCollider);
-                        var myMaterial = new BABYLON.StandardMaterial("myBallMaterial", scene);
-                        myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
-                        sphereCollider.material = myMaterial;
-                        sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0 }, scene);
-                        balls.push(sphereCollider);
+                var i = 15;
+                var handle = window.setInterval(() => {
+                    i--;
+                    if (i === -1) {
+                        setInterval(function () {
+                            if (balls.length < 5) {
+                                var sphereCollider = BABYLON.Mesh.CreateSphere("s", 16, 0.5, scene);
+                                sphereCollider.position.y = mesh.position.y;
+                                sphereCollider.position.z = mesh.position.z + 0.75;
+                                sphereCollider.position.x = mesh.position.x;
+                                balls.push(sphereCollider);
+                                var myMaterial = new BABYLON.StandardMaterial("myBallMaterial", scene);
+                                myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
+                                sphereCollider.material = myMaterial;
+                                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0, restitution: 0 }, scene);
+                                balls.push(sphereCollider);
 
+                            }
+                        }, 1500);
                     }
                 }, 1500);
             });
@@ -272,10 +293,80 @@
                 mesh.isVisible = true;
                 mesh.physicsImpostor = new BABYLON.PhysicsImpostor(mesh, BABYLON.PhysicsImpostor.MeshImpostor, { mass: 0, friction: 0 });
             });
+
             manageEvents(scene);
 
             return scene;
         };
+        function build_GUI() {
+
+            advancedTexture;
+
+            if (advancedTexture) {
+                advancedTexture.dispose();
+            }
+
+            advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+
+            var autoresPanel = new BABYLON.GUI.StackPanel();
+            autoresPanel.width = "350px"
+            autoresPanel.height = "100px";
+            autoresPanel.isVertical = true;
+            autoresPanel.paddingBottom = "20px";
+            autoresPanel.horizontalAlignment = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_RIGHT;
+            autoresPanel.verticalAlignment = BABYLON.GUI.Control.VERTICAL_ALIGNMENT_BOTTOM;
+            autoresPanel.fontSize = 16;
+            advancedTexture.addControl(autoresPanel);
+
+            var addHeader = function (text, panel, alinhamento) {
+                var header = new BABYLON.GUI.TextBlock();
+                header.text = text;
+                header.height = "30px";
+                header.color = "white";
+                header.textHorizontalAlignment = alinhamento;
+
+                panel.addControl(header);
+            }
+
+            var alinhamentoCentro = BABYLON.GUI.Control.HORIZONTAL_ALIGNMENT_CENTER;
+
+            addHeader("AUTORES", autoresPanel, alinhamentoCentro);
+            addHeader("Francisco Godinho Neto - 180141", autoresPanel, alinhamentoCentro);
+            addHeader("Vinícius Cavalcante Silva Souza - 180854", autoresPanel, alinhamentoCentro);
+
+            btn_restart = BABYLON.GUI.Button.CreateSimpleButton("btn_restart", "RESTART");
+            btn_restart.isVisible = false;
+            btn_restart.width = "150px";
+            btn_restart.height = "40px";
+            btn_restart.color = "white";
+            btn_restart.cornerRadius = 20;
+            btn_restart.background = "gray";
+
+            advancedTexture.addControl(btn_restart);
+        }
+        function start_game() {
+
+            var i = 15;
+            var textBlock = new BABYLON.GUI.TextBlock("text", new String(i));
+            textBlock.color = "red";
+            textBlock.fontSize = "60px";
+            var advancedTexture = BABYLON.GUI.AdvancedDynamicTexture.CreateFullscreenUI("UI");
+            advancedTexture.addControl(textBlock);
+            var handle = window.setInterval(() => {
+                i--;
+                textBlock.text = new String(i);
+                if (i === -1) {
+                    window.clearInterval(handle);
+                    textBlock.dispose();
+                    advancedTexture.dispose();
+                    build_machine();
+                }
+            }, 1000);
+        }
+        function build_machine() {
+
+        }
+
         function createParticles(scene) {
 
             xLimit = 25;
@@ -371,7 +462,7 @@
                 var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
                 myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
                 sphereCollider.material = myMaterial;
-                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0 }, scene);
+                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0, restitution: 0  }, scene);
             }
         }
         function manageEvents(scene) {
@@ -524,7 +615,7 @@
 
             ribbon.rotation.x += Math.PI / 2;
             ribbon.position = new BABYLON.Vector3(18, -27, -6);
-            ribbon.physicsImpostor = new BABYLON.PhysicsImpostor(ribbon, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0, friction: 0, restitution: 0.5 });
+            ribbon.physicsImpostor = new BABYLON.PhysicsImpostor(ribbon, BABYLON.PhysicsImpostor.HeightmapImpostor, { mass: 0, friction: 0, restitution: 0 });
             // ribbon.rotation.z += Math.PI / 10;
         }
         function createWall() {
