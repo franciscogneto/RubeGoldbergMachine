@@ -52,26 +52,16 @@
         var cond3 = true;
         var advancedTexture = null;
         var balls = [];
+        var ship;
         var createDefaultEngine = function () { return new BABYLON.Engine(canvas, true, { preserveDrawingBuffer: true, stencil: true, disableWebGL2Support: false }); };
 
         var createScene = function () {
             // Setup scene
             const scene = new BABYLON.Scene(engine);
             /*const camera = new BABYLON.ArcRotateCamera("Camera", -Math.PI / 2, Math.PI / 3, 4, new BABYLON.Vector3(0, - 70, -100));
-            camera.attachControl(canvas, true);*/var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -20), scene);
-
-            // Enable mouse wheel inputs.
+            camera.attachControl(canvas, true);*/
+            var camera = new BABYLON.FreeCamera("camera1", new BABYLON.Vector3(0, 5, -20), scene);
             camera.inputs.addMouseWheel();
-
-            // Change the mouse wheel Y axis to controll the cameras height in the scene:
-            //camera.inputs.attached["mousewheel"].wheelYMoveRelative = BABYLON.Coordinate.Y;
-
-            // Revese the mouse wheel Y axis direction:
-            // camera.inputs.attached["mousewheel"].wheelPrecisionY = -1;
-
-
-
-            // This attaches the camera to the canvas
             camera.attachControl(true);
 
 
@@ -85,12 +75,21 @@
             //createSpheres();
             createParticles(scene);
             loadSound(scene);
+            // Skybox
+            var skybox = BABYLON.MeshBuilder.CreateBox("skyBox", { size: 10000.0 }, scene);
+            var skyboxMaterial = new BABYLON.StandardMaterial("skyBox", scene);
+            skyboxMaterial.backFaceCulling = false;
+            skyboxMaterial.reflectionTexture = new BABYLON.CubeTexture("http://www.babylonjs-playground.com/textures/TropicalSunnyDay", scene);
+            skyboxMaterial.reflectionTexture.coordinatesMode = BABYLON.Texture.SKYBOX_MODE;
+            skyboxMaterial.diffuseColor = BABYLON.Color3.Black();
+            skyboxMaterial.specularColor = BABYLON.Color3.Black();
+            skybox.material = skyboxMaterial;
             //createTube();
             var myMaterial = new BABYLON.StandardMaterial("myMaterial2", scene);
             myMaterial.diffuseTexture = new BABYLON.Texture("textures/madeira.jpg");
             start_game();
             build_GUI();
-
+            //onCollide();
 
             //roda
             BABYLON.SceneLoader.ImportMesh("", "models/", "roda.babylon", scene, function (newMeshes) {
@@ -254,10 +253,21 @@
                             cond3 = true;
                     }
 
-                    /*balls.forEach((element) => {
-                        if (element.position.y <= - 800)
+                    balls.forEach((element) => {
+                        if (element.position.y <= - 800) {
                             element.dispose();
-                    });*/
+                        }
+                        else {
+                            if (ship != null) {
+                                if (element.intersectsMesh(ship) && element.position.y <= -270) {
+                                    onCollide(element.position);
+                                    console.log('y: ' + element.position.y);
+                                    element.dispose();
+                                }
+                            }
+
+                        }
+                    });
                 });
                 var i = 15;
                 var handle = window.setInterval(() => {
@@ -283,10 +293,12 @@
             });
 
             //ship
+
             BABYLON.SceneLoader.ImportMesh("", "models/", "ship.babylon", scene, function (newMeshes) {
                 // Set the target of the camera to the first imported mesh
                 scene.getMeshByName('ship');
                 var mesh = newMeshes[0];
+                ship = newMeshes[0];
                 mesh.material = myMaterial;
                 mesh.position = new BABYLON.Vector3(35, -320, -80);
                 mesh.scaling = new BABYLON.Vector3(3, 3, 3);
@@ -298,6 +310,45 @@
 
             return scene;
         };
+        function onCollide(position) {
+            xLimit = 25;
+            var particleSystem = new BABYLON.ParticleSystem("particles", 100, scene);
+            particleSystem.particleTexture = new BABYLON.Texture("textures/fire.png", scene);
+            particleSystem.emitter = position;
+            particleSystem.minEmitBox = new BABYLON.Vector3(0, 0, 0);
+            particleSystem.maxEmitBox = new BABYLON.Vector3(2, 3, 0);
+            particleSystem.color1 = new BABYLON.Color4(1, 1, 1, 1);
+
+            particleSystem.colorDead = new BABYLON.Color4(1, 1, 1, 1);
+
+            particleSystem.minSize = 0.1;
+            particleSystem.maxSize = 0.2;
+
+            particleSystem.minLifeTime = 0.1;
+            particleSystem.maxLifeTime = 0.3;
+
+            particleSystem.emitRate = 500;
+
+            particleSystem.blendMode = BABYLON.ParticleSystem.BLENDMODE_ONEONE;
+
+
+
+            particleSystem.direction1 = new BABYLON.Vector3(0, 8, 2);
+            particleSystem.direction2 = new BABYLON.Vector3(1, 8, -2);
+
+            particleSystem.minAngularSpeed = 0;
+            particleSystem.maxAngularSpeed = Math.PI;
+
+            particleSystem.minEmitPower = 1;
+            particleSystem.maxEmitPower = 2;
+            particleSystem.updateSpeed = 0.025;
+            particleSystem.maxLifeTime = 3;
+
+            particleSystem.targetStopDuration = 2;
+            particleSystem.start();
+
+
+        }
         function build_GUI() {
 
             advancedTexture;
@@ -462,7 +513,7 @@
                 var myMaterial = new BABYLON.StandardMaterial("myMaterial", scene);
                 myMaterial.diffuseColor = new BABYLON.Color3(Math.random(), Math.random(), Math.random());
                 sphereCollider.material = myMaterial;
-                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0, restitution: 0  }, scene);
+                sphereCollider.physicsImpostor = new BABYLON.PhysicsImpostor(sphereCollider, BABYLON.PhysicsImpostor.SphereImpostor, { mass: 1, friction: 0, restitution: 0 }, scene);
             }
         }
         function manageEvents(scene) {
